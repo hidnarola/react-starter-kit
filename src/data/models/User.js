@@ -23,7 +23,9 @@ const User = Model.define(
       type: DataType.STRING(255),
       validate: { isEmail: true },
     },
-
+    name: {
+      type: DataType.STRING(255),
+    },
     emailConfirmed: {
       type: DataType.BOOLEAN,
       defaultValue: false,

@@ -39,7 +39,7 @@ module.exports = {
 
   // Database
   databaseUrl: process.env.DATABASE_URL || 'sqlite:database.sqlite',
-
+  PostgresDbUrl: 'postgresql://postgres:narola21@localhost:5432/hotel_db',
   // Web analytics
   analytics: {
     // https://analytics.google.com/

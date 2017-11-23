@@ -47,7 +47,6 @@ const news = {
       if (items.length) {
         return items;
       }
-
       return lastFetchTask;
     }
 

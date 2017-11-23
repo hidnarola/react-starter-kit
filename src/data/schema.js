@@ -16,6 +16,11 @@ import me from './queries/me';
 import news from './queries/news';
 import intl from './queries/intl';
 
+const typeDefs = `
+type Query {
+  testString: String
+}
+`;
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',

@@ -39,6 +39,9 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import { setLocale } from './actions/intl';
 import config from './config';
+import chalk from 'chalk';
+// import { Pool, Client } from 'pg';
+const { Pool, Client } = require('pg');
 
 const app = express();
 
@@ -48,6 +51,19 @@ const app = express();
 // -----------------------------------------------------------------------------
 global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
+
+// Postgre Connection
+const connectionString = config.PostgresDbUrl;
+const client = new Client({
+  connectionString,
+});
+client.connect();
+
+// pool.query('SELECT NOW()', (err, res) => {
+//   console.log(err, res)
+//   console.log('POSTGRE CONNECTED',res)
+//   pool.end()
+// })
 
 //
 // Register Node.js middleware
@@ -131,7 +147,15 @@ const graphqlMiddleware = expressGraphQL(req => ({
 app.use('/graphql', graphqlMiddleware);
 
 app.post('/registerUser', (req, res) => {
-  console.log('Registered User Data', req.body);
+  const text =
+    'INSERT INTO users(user_name, user_email,user_password) VALUES($1, $2, $3) RETURNING *';
+  const values = [req.body.username, req.body.useremail, req.body.userpassword];
+  client
+    .query(text, values)
+    .then(res => {
+      console.log(chalk.green(res.rows[0].user_name));
+    })
+    .catch(e => console.error(e.stack));
 });
 
 app.post('/loginUser', (req, res) => {

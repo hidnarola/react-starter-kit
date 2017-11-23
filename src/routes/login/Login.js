@@ -9,12 +9,52 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Login.css';
+import { LoginUser } from '../..//helpersforApi/UserHelper';
+import classnames from 'classnames';
 
 class Login extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
+    LoginUser: PropTypes.func.isRequired,
+  };
+  constructor() {
+    super();
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      usernameOrEmail: '',
+      userpassword: '',
+      errors: {},
+    };
+  }
+  handleChange = e => {
+    if (this.state.errors) {
+      const errors = Object.assign({}, this.state.errors);
+      delete errors[e.target.name];
+      this.setState({ [e.target.name]: e.target.value, errors });
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
+    }
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const errors = {};
+    if (this.state.usernameOrEmail === '')
+      errors.usernameOrEmail = 'User name or Email cant be empty';
+    if (this.state.userpassword === '')
+      errors.userpassword = 'User email cant be empty';
+
+    this.setState({ errors });
+
+    const isValid = Object.keys(errors).length === 0;
+
+    if (isValid) {
+      this.props.LoginUser(this.state);
+    }
   };
 
   render() {
@@ -24,9 +64,7 @@ class Login extends React.Component {
           <h1>
             {this.props.title}
           </h1>
-          <p className={s.lead}>
-            Log in with your username or company email address.
-          </p>
+          <p className={s.lead}>Log in with your username or email address.</p>
           <div className={s.formGroup}>
             <a className={s.facebook} href="/login/facebook">
               <svg
@@ -91,29 +129,43 @@ class Login extends React.Component {
             </a>
           </div>
           <strong className={s.lineThrough}>OR</strong>
-          <form method="post">
+          <form onSubmit={this.handleSubmit}>
             <div className={s.formGroup}>
               <label className={s.label} htmlFor="usernameOrEmail">
                 Username or email address:
               </label>
               <input
-                className={s.input}
+                className={classnames(s.input, {
+                  [s.danger]: !!this.state.errors.usernameOrEmail,
+                })}
                 id="usernameOrEmail"
                 type="text"
                 name="usernameOrEmail"
+                onChange={this.handleChange}
                 autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               />
+              {!!this.state.errors.usernameOrEmail &&
+                <span className={s.error}>
+                  {this.state.errors.usernameOrEmail}
+                </span>}
             </div>
             <div className={s.formGroup}>
-              <label className={s.label} htmlFor="password">
+              <label className={s.label} htmlFor="userpassword">
                 Password:
               </label>
               <input
-                className={s.input}
-                id="password"
+                className={classnames(s.input, {
+                  [s.danger]: !!this.state.errors.userpassword,
+                })}
+                id="userpassword"
                 type="password"
-                name="password"
+                name="userpassword"
+                onChange={this.handleChange}
               />
+              {!!this.state.errors.userpassword &&
+                <span className={s.error}>
+                  {this.state.errors.userpassword}
+                </span>}
             </div>
             <div className={s.formGroup}>
               <button className={s.button} type="submit">
@@ -126,5 +178,8 @@ class Login extends React.Component {
     );
   }
 }
-
-export default withStyles(s)(Login);
+function mapStateTProps(state) {
+  console.log(state);
+  return state;
+}
+export default connect(mapStateTProps, { LoginUser })(withStyles(s)(Login));

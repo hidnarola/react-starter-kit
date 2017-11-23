@@ -130,6 +130,23 @@ const graphqlMiddleware = expressGraphQL(req => ({
 
 app.use('/graphql', graphqlMiddleware);
 
+app.post('/registerUser', (req, res) => {
+  console.log('Registered User Data', req.body);
+});
+
+app.post('/loginUser', (req, res) => {
+  console.log('Logged In User', req.body);
+  const token = jwt.sign(
+    {
+      username: req.body.username,
+      useremail: req.body.useremail,
+      userpassword: req.body.userpassword,
+    },
+    'secretkey',
+  );
+
+  res.json({ EncodedUserToken: token });
+});
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------

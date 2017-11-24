@@ -146,31 +146,6 @@ const graphqlMiddleware = expressGraphQL(req => ({
 
 app.use('/graphql', graphqlMiddleware);
 
-app.post('/registerUser', (req, res) => {
-  const text =
-    'INSERT INTO users(user_name, user_email,user_password) VALUES($1, $2, $3) RETURNING *';
-  const values = [req.body.username, req.body.useremail, req.body.userpassword];
-  client
-    .query(text, values)
-    .then(res => {
-      console.log(chalk.green(res.rows[0].user_name));
-    })
-    .catch(e => console.error(e.stack));
-});
-
-app.post('/loginUser', (req, res) => {
-  console.log('Logged In User', req.body);
-  const token = jwt.sign(
-    {
-      username: req.body.username,
-      useremail: req.body.useremail,
-      userpassword: req.body.userpassword,
-    },
-    'secretkey',
-  );
-
-  res.json({ EncodedUserToken: token });
-});
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------

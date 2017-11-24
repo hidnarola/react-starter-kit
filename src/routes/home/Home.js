@@ -16,21 +16,9 @@ import newsQuery from './news.graphql';
 import s from './Home.css';
 
 class Home extends React.Component {
-  // static propTypes = {
-  //   data: PropTypes.shape({
-  //     loading: PropTypes.bool.isRequired,
-  //     news: PropTypes.arrayOf(
-  //       PropTypes.shape({
-  //         title: PropTypes.string.isRequired,
-  //         link: PropTypes.string.isRequired,
-  //         content: PropTypes.string,
-  //       }),
-  //     ),
-  //   }).isRequired,
-  // };
+
 
   render() {
-    // const { data: { loading, news } } = this.props;
     return (
       <div className={s.root}>
         <div className={s.container}>

@@ -22,7 +22,6 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { graphql } from "react-apollo";
 import gql from 'graphql-tag';
-import { RegisterUser } from '../../helpersforApi/UserHelper';
 import s from './Register.css';
 
 class Register extends React.Component {
@@ -83,6 +82,7 @@ class Register extends React.Component {
       })
         .then(({ data }) => {
           console.log('got data', data);
+          console.log('Registration Successfull')
         }).catch((error) => {
           console.log('there was an error sending the query', error);
         });
@@ -170,6 +170,8 @@ class Register extends React.Component {
     );
   }
 }
+
+
 const addPerson = gql`
   mutation addPerson($personemail:String!, $personpassword:String!,$personconfirmpassword:String!)
   {

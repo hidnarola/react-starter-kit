@@ -1,5 +1,4 @@
 import { validate, execute, specifiedRules } from 'graphql';
-
 import ApolloClient from 'apollo-client';
 
 // Execute all GraphQL requests directly without

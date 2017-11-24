@@ -15,12 +15,10 @@ import {
 import me from './queries/me';
 import news from './queries/news';
 import intl from './queries/intl';
+import person from './queries/person';
+import  Mutation from "../data/mutations/personMutations";
 
-const typeDefs = `
-type Query {
-  testString: String
-}
-`;
+// const schema = makeExecutableSchema({ typeDefs });
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
@@ -28,8 +26,11 @@ const schema = new Schema({
       me,
       news,
       intl,
+      person
     },
   }),
+  mutation: Mutation
 });
 
+// addMockFunctionsToSchema({ schema, mocks });
 export default schema;

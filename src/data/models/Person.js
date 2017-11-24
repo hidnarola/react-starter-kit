@@ -10,29 +10,28 @@
 import DataType from 'sequelize';
 import Model from '../sequelize';
 
-const User = Model.define(
-  'User',
+const Person = Model.define(
+  'Person',
   {
     id: {
       type: DataType.UUID,
       defaultValue: DataType.UUIDV1,
       primaryKey: true,
     },
-    email: {
+    personemail: {
       type: DataType.STRING(255),
       validate: { isEmail: true },
     },
-    name: {
+    personpassword: {
       type: DataType.STRING(255),
     },
-    emailConfirmed: {
-      type: DataType.BOOLEAN,
-      defaultValue: false,
+    personconfirmpassword: {
+      type: DataType.STRING(255),
     },
   },
   {
-    indexes: [{ fields: ['email'] }],
+    indexes: [{ fields: ['personemail'] }],
   },
 );
 
-export default User;
+export default Person;

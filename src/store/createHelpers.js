@@ -3,7 +3,10 @@ You should use Apollo: \`client.query({ query, variables...})\` or \`client.muta
 Don't forget to enclose your query to gql\`…\` tag or import *.graphql file.
 See docs at http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\\.query`;
 
-function createGraphqlRequest(apolloClient) {
+function createGraphqlRequest(apolloClient)
+{
+
+
   return async function graphqlRequest(queryOrString, variables, options = {}) {
     if (__DEV__) {
       // eslint-disable-next-line no-console

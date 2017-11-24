@@ -20,22 +20,22 @@ import PropTypes, { func } from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-// import { error } from 'util';
+import { graphql } from "react-apollo";
+import gql from 'graphql-tag';
 import { RegisterUser } from '../../helpersforApi/UserHelper';
 import s from './Register.css';
 
 class Register extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    RegisterUser: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
+
+  constructor(props) {
+    super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      username: '',
       useremail: '',
       userpassword: '',
       userconfirmpassword: '',
@@ -43,7 +43,8 @@ class Register extends React.Component {
     };
   }
   handleChange = e => {
-    if (this.state.errors) {
+    if (this.state.errors)
+    {
       const errors = Object.assign({}, this.state.errors);
       delete errors[e.target.name];
       this.setState({ [e.target.name]: e.target.value, errors });
@@ -54,8 +55,8 @@ class Register extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const errors = {};
+
     // custom validations
-    if (this.state.username === '') errors.username = 'User name cant be empty';
     if (this.state.useremail === '')
       errors.useremail = 'User email cant be empty';
     if (this.state.userpassword === '')
@@ -67,17 +68,24 @@ class Register extends React.Component {
 
     // setting all errrors
     this.setState({ errors });
-
     const isValid = Object.keys(errors).length === 0;
 
-    const userArray = {
-      username: this.state.username,
-      useremail: this.state.useremail,
-      userpassword: this.state.userpassword,
-      userconfirmpassword: this.state.userconfirmpassword,
-    };
-    if (isValid) {
-      this.props.RegisterUser(userArray);
+    if(isValid)
+    {
+
+      // **** calling the mutations of the person***
+      this.props.mutate({
+        variables: {
+          personemail: this.state.useremail,
+          personpassword: this.state.userpassword,
+          personconfirmpassword: this.state.userconfirmpassword,
+        }
+      })
+        .then(({ data }) => {
+          console.log('got data', data);
+        }).catch((error) => {
+          console.log('there was an error sending the query', error);
+        });
     }
   };
   render() {
@@ -88,26 +96,7 @@ class Register extends React.Component {
             {this.props.title}
           </h1>
           <form onSubmit={this.handleSubmit}>
-            <div className={s.formGroup}>
-              <label className={s.label} htmlFor="username">
-                Username
-              </label>
-              <input
-                className={classnames(s.input, {
-                  [s.danger]: !!this.state.errors.username,
-                })}
-                id="username"
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleChange}
-                autoFocus // eslint-disable-line jsx-a11y/no-autofocus
-              />
-              {!!this.state.errors.username &&
-                <span className={s.error}>
-                  {this.state.errors.username}
-                </span>}
-            </div>
+
             <div className={s.formGroup}>
               <label className={s.label} htmlFor="useremail">
                 Email Address
@@ -162,7 +151,7 @@ class Register extends React.Component {
                 value={this.state.userconfirmpassword}
               />
             </div>
-            {!!this.state.errors.userconfirmpassword &&
+             {!!this.state.errors.userconfirmpassword &&
               <span className={s.error}>
                 {this.state.errors.userconfirmpassword}
               </span>}
@@ -181,5 +170,14 @@ class Register extends React.Component {
     );
   }
 }
-
-export default connect(null, { RegisterUser })(withStyles(s)(Register));
+const addPerson = gql`
+  mutation addPerson($personemail:String!, $personpassword:String!,$personconfirmpassword:String!)
+  {
+    addPerson(personemail: $personemail, personpassword: $personpassword ,personconfirmpassword :$personconfirmpassword) {
+      personemail
+      personpassword
+      personconfirmpassword
+    }
+  }
+`;
+export default graphql(addPerson)(withStyles(s)(Register));

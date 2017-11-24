@@ -8,20 +8,12 @@
  */
 
 import React from 'react';
-import { defineMessages } from 'react-intl';
 import Layout from '../../components/Layout';
 import Login from './Login';
 
-const messages = defineMessages({
-  title: {
-    id: 'login.title',
-    description: 'Log in page title',
-    defaultMessage: 'Log In',
-  },
-});
+const title = 'Log In';
 
-function action({ intl }) {
-  const title = intl.formatMessage(messages.title);
+function action() {
   return {
     chunks: ['login'],
     title,

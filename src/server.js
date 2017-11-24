@@ -53,11 +53,11 @@ global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
 
 // Postgre Connection
-const connectionString = config.PostgresDbUrl;
-const client = new Client({
-  connectionString,
-});
-client.connect();
+// const connectionString = config.PostgresDbUrl;
+// const client = new Client({
+//   connectionString,
+// });
+// client.connect();
 
 // pool.query('SELECT NOW()', (err, res) => {
 //   console.log(err, res)
